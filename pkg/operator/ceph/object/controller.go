@@ -458,8 +458,17 @@ func (r *ReconcileCephObjectStore) reconcileCreateObjectStore(cephObjectStore *c
 			return r.setFailedStatus(k8sutil.ObservedGenerationNotAvailable, namespacedName, "failed to configure multisite for object store", err)
 		}
 
-		// Create or Update Store
-		err = cfg.createOrUpdateStore(realmName, zoneGroupName, zoneName)
+		// Retrieve the keystone secret if specified
+		var keystoneSecret *corev1.Secret
+		if ks := cephObjectStore.Spec.Auth.Keystone; ks != nil {
+			keystoneSecret, err = objContext.Context.Clientset.CoreV1().Secrets(objContext.clusterInfo.Namespace).Get(objContext.clusterInfo.Context, ks.ServiceUserSecretName, metav1.GetOptions{})
+			if err != nil {
+				return reconcile.Result{}, errors.Wrapf(err, "failed to get the keystone credential secret")
+			}
+		}
+
+		// Create or Update store
+		err = cfg.createOrUpdateStore(realmName, zoneGroupName, zoneName, keystoneSecret)
 		if err != nil {
 			return reconcile.Result{}, errors.Wrapf(err, "failed to create object store %q", cephObjectStore.Name)
 		}
@@ -559,7 +568,7 @@ func (r *ReconcileCephObjectStore) reconcileCOSIUser(cephObjectStore *cephv1.Cep
 	}
 
 	// Create COSI user secret
-	return ReconcileCephUserSecret(r.opManagerContext, r.client, r.scheme, cephObjectStore, &user, objCtx.Endpoint, cephObjectStore.Namespace, cephObjectStore.Name, cephObjectStore.Spec.Gateway.SSLCertificateRef)
+	return ReconcileCephUserSecrets(r.opManagerContext, r.client, r.scheme, cephObjectStore, &user, objCtx.Endpoint, cephObjectStore.Namespace, cephObjectStore.Name, cephObjectStore.Spec.Gateway.SSLCertificateRef)
 }
 
 func generateCOSIUserConfig() *admin.User {
