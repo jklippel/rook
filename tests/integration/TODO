@@ -53,3 +53,28 @@ https://pkg.go.dev/github.com/gophercloud/gophercloud@v1.8.0/openstack/objectsto
 ## nach erstem rudimentären mal den PR aufmachen und die Community einbinden
 
 ## einen Blick auf Coverage werfen
+
+## Schauen, warum das ceph_manifest.go Dinge verwenden möchte, die nicht im CRD sind
+
+```
+diff --git a/tests/framework/installer/ceph_manifests.go b/tests/framework/installer/ceph_manifests.go
+index 5cba689e2..21aa32ee8 100644
+--- a/tests/framework/installer/ceph_manifests.go
++++ b/tests/framework/installer/ceph_manifests.go
+@@ -498,14 +498,9 @@ spec:
+   {{ end }}
+   gateway:
+     resources: null
+-    type: s3
+     {{ if .TLS }}securePort: {{ .Port }}{{ else }}port: {{ .Port }}{{ end }}
+     instances: {{ .ReplicaCount }}
+-    {{ if .TLS }}sslCertificateRef: {{ .Name }}{{ end }}
+-  healthCheck:
+-    bucket:
+-      disabled: false
+-      interval: {{ if .TLS }}10s{{ else }}5s{{ end }}`
++    {{ if .TLS }}sslCertificateRef: {{ .Name }}{{ end }}`
+
+        return renderTemplate(tmpl, spec)
+ }
+```
