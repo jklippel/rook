@@ -1,0 +1,55 @@
+# DO NOT MERGE
+
+This file is a todo list for the implementation of integration tests for the rook/ceph/swift with keystone functionality.
+
+## Keystone-Deployment hinzufügen
+
+- Via Yaook-Operator oder abgestript via Manifest-Dateien
+- TLS muss drin bleiben
+- SQLite reicht aus
+- keystone-manage bootstrap in init-Container?
+
+Präferenz: Wenns klein geht mittels Manifest-Dateien
+
+## Schauen, warum das cephfs getestet wird
+
+## OpenStack-Library (gophercloud) oder swift-Client verwenden?
+
+https://github.com/ncw/swift
+oder
+https://pkg.go.dev/github.com/gophercloud/gophercloud@v1.8.0/openstack/objectstorage/v1/containers
+
+## Was wollen wir testen?
+
+### Swift
+
+- Container anlegen
+- Datei in Container ablegen
+- Datei aus Container laden
+- Datei in Container löschen
+- Container löschen
+- unberechtigter Zugriff
+- berechtigte Zugriffe (Read, Write, Admin)
+- Smoke-Test? (many requests to keystone)
+
+### S3
+
+- Bucket anlegen
+- Bucket verwenden
+- Bucket löschen
+- unberechtigter Zugriff
+- berechtigte Zugriffe (Read, Write, Admin)
+
+## CephObjektStoreUser + Subuser
+
+- Was machen wir mit der Funktionalität?
+- Trennen wir den MR/PR/Branch auf?
+- Testen wir diese Funktionalität auch?
+
+## Spezifikation lesen und schauen ob wir alles abgedeckt haben
+
+## Ceph-Swift-Dokumentation anschauen und verbessern
+
+## nach erstem rudimentären mal den PR aufmachen und die Community einbinden
+
+## einen Blick auf Coverage werfen
