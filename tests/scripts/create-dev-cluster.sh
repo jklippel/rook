@@ -105,7 +105,7 @@ setup_minikube_env() {
     minikube_driver="$(get_minikube_driver)"
     echo "Setting up minikube env for profile '$ROOK_PROFILE_NAME' (using $minikube_driver driver)"
     $MINIKUBE delete
-    $MINIKUBE start --disk-size=40g --extra-disks=3 --driver "$minikube_driver"
+    $MINIKUBE start --disk-size=40g --extra-disks=3 --driver "$minikube_driver" $ROOK_MINIKUBE_EXTRA_ARGS
     eval "$($MINIKUBE docker-env)"
 }
 
