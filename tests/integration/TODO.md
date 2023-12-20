@@ -4,12 +4,63 @@ This file is a todo list for the implementation of integration tests for the roo
 
 ## Keystone-Deployment hinzufügen
 
-- Via Yaook-Operator oder abgestript via Manifest-Dateien
-- TLS muss drin bleiben
-- SQLite reicht aus
-- keystone-manage bootstrap in init-Container?
+### (done) Via Yaook-Operator oder abgestript via Manifest-Dateien
 
-Präferenz: Wenns klein geht mittels Manifest-Dateien
+ja, Tendenz: abgestrippte Manifest-Dateien (siehe nächster Abschnitt)
+
+### (done) abgestrippte Manifest-Dateien
+
+Ich hab jetzt eine Keystone-Deployment-Version ohne Yaook aber mit TLS.
+
+Das findet sich im rook-minikube-keystone repository unter resources/keystone-only.
+
+Da gibt es zwei Skripte:
+
+- provision-keystone.sh
+- deprovision-keystone.sh
+
+Das legt Keystone ohne Yaook im Rook-Test/Dev-Minikube Cluster an. Inklusive Cert-Manager-Installation und ca-issuer.
+
+Das kann man mit `kubectl apply -n keystone -f osc.yaml` ebenfalls deployen.
+Credentials und die notwendige Variable zur CA-Datei sind bereits im Environment des Deployments enthalten.
+
+Eine Shell im Pod starten:
+
+```sh
+kubectl exec -n keystone -ti deployment/osc -- bash
+```
+Dann kann man, wenn der keystone-api Pod "Ready" ist, mit dem OpenStack Client auf das Keystone zugreifen.
+
+```sh
+openstack endpoint list
+```
+
+und auch User anlegen:
+
+```sh
+openstack user create alice --password 4l1c3
+```
+
+### (done) TLS muss drin bleiben
+
+Ja, ist noch drin. Ich habs direkt in den Apache eingebaut (siehe Datei `apache2.conf`).
+Das man den Cert-Manager braucht find ich grad noch etwas unschön.
+
+## (done) SQLite reicht aus
+
+Ja, keystone verwendet jetzt sqlite. (siehe `keystone.conf`)
+Die Datenbank wird von einem Init-Container befüllt.
+Ein weiterer Init-Container legt die ersten Endpoints an.
+
+## (done) keystone-manage bootstrap in init-Container?
+Ist integriert. Das ist der, der die ersten Init-Container anlegt.
+
+## (done) Präferenz: Wenns klein geht mittels Manifest-Dateien
+
+Ja ich denke es ist recht übersichtlich geworden. Die Cert-Manager Installation find ich noch nicht so toll,
+aber zum Starten reichts auf jeden Fall.
+
+## Integration der Manifest-Dateien in rook-Integration-Test
 
 ## Schauen, warum das cephfs getestet wird
 
