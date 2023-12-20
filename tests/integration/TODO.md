@@ -46,21 +46,25 @@ openstack user create alice --password 4l1c3
 Ja, ist noch drin. Ich habs direkt in den Apache eingebaut (siehe Datei `apache2.conf`).
 Das man den Cert-Manager braucht find ich grad noch etwas unschön.
 
-## (done) SQLite reicht aus
+### (done) SQLite reicht aus
 
 Ja, keystone verwendet jetzt sqlite. (siehe `keystone.conf`)
 Die Datenbank wird von einem Init-Container befüllt.
 Ein weiterer Init-Container legt die ersten Endpoints an.
 
-## (done) keystone-manage bootstrap in init-Container?
+### (done) keystone-manage bootstrap in init-Container?
 Ist integriert. Das ist der, der die ersten Init-Container anlegt.
 
-## (done) Präferenz: Wenns klein geht mittels Manifest-Dateien
+### (done) Präferenz: Wenns klein geht mittels Manifest-Dateien
 
 Ja ich denke es ist recht übersichtlich geworden. Die Cert-Manager Installation find ich noch nicht so toll,
 aber zum Starten reichts auf jeden Fall.
 
-## Integration der Manifest-Dateien in rook-Integration-Test
+### Integration der Manifest-Dateien in rook-Integration-Test
+
+Keystone-Only-Deployment in `ceph_base_keystone.go` übertragen.
+
+Das keystone-api-Deployment wird angelegt und dann wieder gelöscht.
 
 ## Schauen, warum das cephfs getestet wird
 
