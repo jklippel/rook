@@ -103,6 +103,74 @@ func InstallKeystoneInTestCluster(shelper *utils.K8sHelper) {
 		logger.Warningf("Could not create service for keystone in namespace %s", namespace)
 	}
 
+	if err := shelper.ResourceOperation("apply", keystoneCreateUserJob()); err != nil {
+		logger.Warningf("Could not create job in namespace %s", namespace)
+	}
+
+	if _, err := executor.ExecuteCommandWithTimeout(315*time.Second, "kubectl", "wait", "--timeout=120s", "--namespace", namespace, "job", "--selector=job=setup-keystone", "--for=condition=Completed"); err != nil {
+		logger.Warningf("Failed to wait for job setup-keystone in namespace %s", namespace)
+	}
+
+}
+
+func keystoneCreateUserJob() string {
+
+	return `apiVersion: batch/v1
+kind: Job
+metadata:
+  name: setup-keystone
+  namespace: ` + namespace + `
+spec:
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        job: setup-keystone
+    spec:
+      containers:
+      - image: registry.gitlab.com/yaook/images/debugbox/openstackclient:devel
+		command: [ "sh", "-c", "'openstack user create --password 4l1c3 --project admin alice'"]
+        env:
+        - name: REQUESTS_CA_BUNDLE
+          value: /etc/ssl/keystone/ca.crt
+        - name: OS_AUTH_TYPE
+          value: password
+        - name: OS_AUTH_URL
+          value: https://keystone.` + namespace + `.svc/v3
+        - name: OS_IDENTITY_API_VERSION
+          value: "3"
+        - name: OS_PROJECT_DOMAIN_NAME
+          value: Default
+        - name: OS_INTERFACE
+          value: internal
+        - name: OS_USER_DOMAIN_NAME
+          value: Default
+        - name: OS_PROJECT_NAME
+          value: admin
+        - name: OS_USERNAME
+          value: admin
+        - name: OS_PASSWORD
+          value: s3cr3t
+        imagePullPolicy: IfNotPresent
+        name: openstackclient
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/ssl/keystone
+          name: keystone-certificate
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: keystone-certificate
+        secret:
+          defaultMode: 420
+          secretName: keystone-api-tls
+`
+
 }
 
 func keystoneApiCaIssuer() string {
@@ -202,7 +270,7 @@ spec:
   usages:
     - server auth
   dnsNames:
-    - keystone.keystone.svc
+    - keystone.` + namespace + `.svc
   issuerRef:
     name: my-ca-issuer
     kind: Issuer
@@ -256,7 +324,7 @@ spec:
           runAsUser: 2500001
       - name: init-keystone-endpoint
         image: registry.yaook.cloud/yaook/keystone-yoga:3.0.30
-        command: [ 'sh', '-c', 'keystone-manage bootstrap --bootstrap-password s3cr3t --bootstrap-username admin --bootstrap-project-name admin --bootstrap-role-name admin --bootstrap-service-name keystone --bootstrap-region-id RegionOne --bootstrap-admin-url https://keystone.keystone.svc --bootstrap-internal-url https://keystone.keystone.svc']
+        command: [ 'sh', '-c', 'keystone-manage bootstrap --bootstrap-password s3cr3t --bootstrap-username admin --bootstrap-project-name admin --bootstrap-role-name admin --bootstrap-service-name keystone --bootstrap-region-id RegionOne --bootstrap-admin-url https://keystone.` + namespace + `.svc --bootstrap-internal-url https://keystone.` + namespace + `.svc']
         volumeMounts:
         - mountPath: /etc/keystone/keystone.conf
           name: keystone-config-vol
