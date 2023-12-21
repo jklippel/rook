@@ -62,9 +62,13 @@ aber zum Starten reichts auf jeden Fall.
 
 ### Integration der Manifest-Dateien in rook-Integration-Test
 
-Keystone-Only-Deployment in `ceph_base_keystone.go` übertragen.
+### (done) Keystone-Only-Deployment in `ceph_base_keystone.go` übertragen.
 
-Das keystone-api-Deployment wird angelegt und dann wieder gelöscht.
+Alle Resourcen sind in `ceph_base_keystone_test.go` integriert.
+
+Der Test läuft auch durch.
+
+### (done) Das keystone-api-Deployment wird angelegt und dann wieder gelöscht.
 
 ## Schauen, warum das cephfs getestet wird
 
