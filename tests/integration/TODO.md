@@ -82,6 +82,9 @@ https://pkg.go.dev/github.com/gophercloud/gophercloud@v1.8.0/openstack/objectsto
 
 ### Swift
 
+Das gibts alles noch nicht, bin mir aber nicht sicher, wie wir das außerhalb des Clusters testen wollen.
+Dann bräuchte es noch einen Ingress-Weg zum Keystone bzw. einen von extern erreichbaren Service.
+
 - Container anlegen
 - Datei in Container ablegen
 - Datei aus Container laden
