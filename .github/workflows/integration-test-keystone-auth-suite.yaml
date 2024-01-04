@@ -53,8 +53,8 @@ jobs:
         if: always()
         run: |
           export LOG_DIR="/home/runner/work/rook/rook/tests/integration/_output/tests/"
-          export CLUSTER_NAMESPACE="keystone-auth-ns"
-          export OPERATOR_NAMESPACE="keystone-auth-ns-system"
+          export CLUSTER_NAMESPACE="keystoneauth-ns"
+          export OPERATOR_NAMESPACE="keystoneauth-ns-system"
           tests/scripts/collect-logs.sh
 
       - name: Artifact
