@@ -40,6 +40,7 @@ und auch User anlegen:
 ```sh
 openstack user create alice --password 4l1c3
 ```
+** alice heißt jetzt rook-user sonst ändert sich nix
 
 ### (done) TLS muss drin bleiben
 
