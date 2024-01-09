@@ -146,4 +146,6 @@ index 5cba689e2..21aa32ee8 100644
 
 In object.go die Funktion GetKeystoneUserSecret anpassen/variabler machen
 
-### Todos in 
+### Todos in ceph_object_test.go anschauen (Parameter swiftAndKeystone sind immer false)
+
+## Nebenschauplatz: tests/scripts/generate-tls-config.sh kubectl version --short schlägt fehl, denn es ist nicht mehr aktuell
