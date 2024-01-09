@@ -141,16 +141,16 @@ func runObjectE2ETest(helper *clients.TestClient, k8sh *utils.K8sHelper, install
 		// and then deletes it.
 		deleteStore := true
 		// TODO: Why ist swiftAndKeystone always set to false?
-		runObjectE2ETestLite(t, helper, k8sh, installer, namespace, otherStoreName, 1, deleteStore, tlsEnable, false)
+		runObjectE2ETestLite(t, helper, k8sh, installer, namespace, otherStoreName, 1, deleteStore, tlsEnable, swiftAndKeystone)
 	})
 
 	// now test operation of the first object store
 	// TODO: Why is there no swiftAndKeystone needed?
-	testObjectStoreOperations(s, helper, k8sh, namespace, storeName)
+	testObjectStoreOperations(s, helper, k8sh, namespace, storeName, swiftAndKeystone)
 
 	bucketNotificationTestStoreName := "bucket-notification-" + storeName
 	// TODO: Why ist swiftAndKeystone always set to false?
-	createCephObjectStore(s.T(), helper, k8sh, installer, namespace, bucketNotificationTestStoreName, 1, tlsEnable, false)
+	createCephObjectStore(s.T(), helper, k8sh, installer, namespace, bucketNotificationTestStoreName, 1, tlsEnable, swiftAndKeystone)
 	testBucketNotifications(s, helper, k8sh, namespace, bucketNotificationTestStoreName)
 	if !tlsEnable {
 		// TODO : need to fix COSI driver to support TLS
@@ -161,24 +161,28 @@ func runObjectE2ETest(helper *clients.TestClient, k8sh *utils.K8sHelper, install
 	}
 }
 
-func testObjectStoreOperations(s *suite.Suite, helper *clients.TestClient, k8sh *utils.K8sHelper, namespace, storeName string) {
+func testObjectStoreOperations(s *suite.Suite, helper *clients.TestClient, k8sh *utils.K8sHelper, namespace, storeName string, swiftAndKeystone bool) {
 	ctx := context.TODO()
 	clusterInfo := client.AdminTestClusterInfo(namespace)
 	t := s.T()
 
-	logger.Infof("Testing Object Operations on %s", storeName)
-	t.Run("create CephObjectStoreUser", func(t *testing.T) {
-		createCephObjectUser(s, helper, k8sh, namespace, storeName, userid, true, true)
-		i := 0
-		for i = 0; i < 4; i++ {
-			if helper.ObjectUserClient.UserSecretExists(namespace, storeName, userid) {
-				break
+	if !swiftAndKeystone {
+		logger.Infof("Testing Object Operations on %s", storeName)
+		t.Run("create CephObjectStoreUser", func(t *testing.T) {
+			createCephObjectUser(s, helper, k8sh, namespace, storeName, userid, true, true)
+			i := 0
+			for i = 0; i < 4; i++ {
+				if helper.ObjectUserClient.UserSecretExists(namespace, storeName, userid) {
+					break
+				}
+				logger.Info("waiting 5 more seconds for user secret to exist")
+				time.Sleep(5 * time.Second)
 			}
-			logger.Info("waiting 5 more seconds for user secret to exist")
-			time.Sleep(5 * time.Second)
-		}
-		assert.NotEqual(t, 4, i)
-	})
+			assert.NotEqual(t, 4, i)
+		})
+	} else {
+		logger.Infof("Skipped creation of user %s (as testing with keystone)", userid)
+	}
 
 	context := k8sh.MakeContext()
 	objectStore, err := k8sh.RookClientset.CephV1().CephObjectStores(namespace).Get(ctx, storeName, metav1.GetOptions{})
