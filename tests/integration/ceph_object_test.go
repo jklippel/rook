@@ -166,23 +166,19 @@ func testObjectStoreOperations(s *suite.Suite, helper *clients.TestClient, k8sh 
 	clusterInfo := client.AdminTestClusterInfo(namespace)
 	t := s.T()
 
-	if !swiftAndKeystone {
-		logger.Infof("Testing Object Operations on %s", storeName)
-		t.Run("create CephObjectStoreUser", func(t *testing.T) {
-			createCephObjectUser(s, helper, k8sh, namespace, storeName, userid, true, true)
-			i := 0
-			for i = 0; i < 4; i++ {
-				if helper.ObjectUserClient.UserSecretExists(namespace, storeName, userid) {
-					break
-				}
-				logger.Info("waiting 5 more seconds for user secret to exist")
-				time.Sleep(5 * time.Second)
+	logger.Infof("Testing Object Operations on %s", storeName)
+	t.Run("create CephObjectStoreUser", func(t *testing.T) {
+		createCephObjectUser(s, helper, k8sh, namespace, storeName, userid, true, true)
+		i := 0
+		for i = 0; i < 4; i++ {
+			if helper.ObjectUserClient.UserSecretExists(namespace, storeName, userid) {
+				break
 			}
-			assert.NotEqual(t, 4, i)
-		})
-	} else {
-		logger.Infof("Skipped creation of user %s (as testing with keystone)", userid)
-	}
+			logger.Info("waiting 5 more seconds for user secret to exist")
+			time.Sleep(5 * time.Second)
+		}
+		assert.NotEqual(t, 4, i)
+	})
 
 	context := k8sh.MakeContext()
 	objectStore, err := k8sh.RookClientset.CephV1().CephObjectStores(namespace).Get(ctx, storeName, metav1.GetOptions{})
