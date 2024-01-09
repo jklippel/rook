@@ -139,4 +139,11 @@ index 5cba689e2..21aa32ee8 100644
 
         return renderTemplate(tmpl, spec)
  }
+
 ```
+
+### GetKeystoneUserSecret anpassen
+
+In object.go die Funktion GetKeystoneUserSecret anpassen/variabler machen
+
+### Todos in 
