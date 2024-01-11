@@ -61,7 +61,7 @@ Ist integriert. Das ist der, der die ersten Init-Container anlegt.
 Ja ich denke es ist recht übersichtlich geworden. Die Cert-Manager Installation find ich noch nicht so toll,
 aber zum Starten reichts auf jeden Fall.
 
-### Integration der Manifest-Dateien in rook-Integration-Test
+### (done) Integration der Manifest-Dateien in rook-Integration-Test
 
 ### (done) Keystone-Only-Deployment in `ceph_base_keystone.go` übertragen.
 
@@ -73,7 +73,9 @@ Der Test läuft auch durch.
 
 ## Schauen, warum das cephfs getestet wird
 
-## OpenStack-Library (gophercloud) oder swift-Client verwenden?
+## (done) OpenStack-Library (gophercloud) oder swift-Client verwenden?
+
+-> Weder noch, wir verwenden die OpenStack CLI in einem Pod
 
 https://github.com/ncw/swift
 oder
@@ -150,3 +152,18 @@ In object.go die Funktion GetKeystoneUserSecret anpassen/variabler machen
 ### Todos in ceph_object_test.go anschauen (Parameter swiftAndKeystone sind immer false)
 
 ## Nebenschauplatz: tests/scripts/generate-tls-config.sh kubectl version --short schlägt fehl, denn es ist nicht mehr aktuell
+
+## (done) Wie kommt die self-signed ca.crt in den example-Store?
+Wir verwenden cert-manager / trust-manager
+
+## (done) In einem Dokument runterschreiben, wie man die Test-Umgebung zum Fliegen bekommt
+
+## Wie kommt die CA-Certificate-ConfigMap in den CephObjectStore? (Funktionalitäts-Erweiterung NICHT mehr nur Test!)
+-> CRD anpassen, damit man den ConfigMap-Namen konfigurieren kann (per Default leer und dann wirds halt nicht gemounted)
+-> Pod/Deployment anpassen, damit die konfigurierte ConfigMap verwendet wird
+
+## S3 Credentials in Keystone anlegen anstelle des ObjectStoreUsers aus den normalen Tests
+-> Access keys aus Keystone in das jetzige Secret legen(?)
+
+## Tests in Openstack-Client implementieren (CLI verwenden)
+Nicht über GopherCloud sondern direkt die OpenStack CLI verwenden (das ist schlie0lich dass was später auch verwendet wird)
