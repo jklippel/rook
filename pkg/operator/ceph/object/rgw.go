@@ -63,9 +63,10 @@ type rgwConfig struct {
 	ZoneGroup    string
 	Zone         string
 
-	Auth           cephv1.AuthSpec
-	KeystoneSecret *v1.Secret
-	Protocols      cephv1.ProtocolSpec
+	Auth            cephv1.AuthSpec
+	KeystoneSecret  *v1.Secret
+	Protocols       cephv1.ProtocolSpec
+	CaConfigMapName string
 }
 
 var updateDeploymentAndWait = mon.UpdateCephDeploymentAndWait
@@ -74,10 +75,10 @@ var (
 	insecureSkipVerify = "insecureSkipVerify"
 )
 
-func (c *clusterConfig) createOrUpdateStore(realmName, zoneGroupName, zoneName string, keystoneSecret *v1.Secret) error {
+func (c *clusterConfig) createOrUpdateStore(realmName, zoneGroupName, zoneName string, keystoneSecret *v1.Secret, caConfigMapName string) error {
 	logger.Infof("creating object store %q in namespace %q", c.store.Name, c.store.Namespace)
 
-	if err := c.startRGWPods(realmName, zoneGroupName, zoneName, keystoneSecret); err != nil {
+	if err := c.startRGWPods(realmName, zoneGroupName, zoneName, keystoneSecret, caConfigMapName); err != nil {
 		return errors.Wrap(err, "failed to start rgw pods")
 	}
 
@@ -99,7 +100,7 @@ func (c *clusterConfig) createOrUpdateStore(realmName, zoneGroupName, zoneName s
 	return nil
 }
 
-func (c *clusterConfig) startRGWPods(realmName, zoneGroupName, zoneName string, keystoneSecret *v1.Secret) error {
+func (c *clusterConfig) startRGWPods(realmName, zoneGroupName, zoneName string, keystoneSecret *v1.Secret, caConfigMapName string) error {
 	// backward compatibility, triggered during updates
 	if c.store.Spec.Gateway.Instances < 1 {
 		// Set the minimum of at least one instance
@@ -131,13 +132,14 @@ func (c *clusterConfig) startRGWPods(realmName, zoneGroupName, zoneName string, 
 		resourceName := fmt.Sprintf("%s-%s-%s", AppName, c.store.Name, daemonLetterID)
 
 		rgwConfig := &rgwConfig{
-			ResourceName:   resourceName,
-			DaemonID:       daemonName,
-			Realm:          realmName,
-			ZoneGroup:      zoneGroupName,
-			Zone:           zoneName,
-			Auth:           c.store.Spec.Auth,
-			KeystoneSecret: keystoneSecret,
+			ResourceName:    resourceName,
+			DaemonID:        daemonName,
+			Realm:           realmName,
+			ZoneGroup:       zoneGroupName,
+			Zone:            zoneName,
+			Auth:            c.store.Spec.Auth,
+			KeystoneSecret:  keystoneSecret,
+			CaConfigMapName: caConfigMapName,
 		}
 
 		// We set the owner reference of the Secret to the Object controller instead of the replicaset

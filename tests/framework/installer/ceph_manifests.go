@@ -502,6 +502,7 @@ spec:
       serviceUserSecretName: usersecret
       tokenCacheSize: 1000
       url: https://keystone.{{ .Manifests.Settings.Namespace }}.svc/
+      caConfigMapName: keystone-bundle
   protocols:
     swift:
       accountInUrl: true

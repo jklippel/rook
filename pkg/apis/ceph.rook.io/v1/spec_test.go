@@ -122,6 +122,7 @@ auth:
     tokenCacheSize: 1000
     revocationInterval: 1200
     serviceUserSecretName: rgw-service-user
+    caConfigMapName: keystone-bundle
 protocols:
   swift:
     accountInUrl: true
