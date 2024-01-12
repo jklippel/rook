@@ -1623,7 +1623,6 @@ type KeystoneSpec struct {
 	ImplicitTenants       ImplicitTenantSetting `json:"implicitTenants,omitempty"`
 	TokenCacheSize        *int                  `json:"tokenCacheSize,omitempty"`
 	RevocationInterval    *int                  `json:"revocationInterval,omitempty"`
-	CaConfigMapName       string                `json:"caConfigMapName,omitempty"`
 }
 
 type ImplicitTenantSetting string

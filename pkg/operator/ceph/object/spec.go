@@ -148,7 +148,6 @@ func (c *clusterConfig) makeRGWPodSpec(rgwConfig *rgwConfig) (v1.PodTemplateSpec
 		Volumes: append(
 			controller.DaemonVolumes(c.DataPathMap, rgwConfig.ResourceName, c.clusterSpec.DataDirHostPath),
 			c.mimeTypesVolume(),
-			CaConfigVolume(rgwConfig.CaConfigMapName),
 		),
 		HostNetwork:        hostNetwork,
 		PriorityClassName:  c.store.Spec.Gateway.PriorityClassName,
@@ -257,17 +256,6 @@ func (c *clusterConfig) makeRGWPodSpec(rgwConfig *rgwConfig) (v1.PodTemplateSpec
 	return podTemplateSpec, nil
 }
 
-func CaConfigVolume(name string) v1.Volume {
-
-	return v1.Volume{
-		Name: "cacerts",
-		VolumeSource: v1.VolumeSource{
-			ConfigMap: &v1.ConfigMapVolumeSource{LocalObjectReference: v1.LocalObjectReference{
-				Name: name,
-			}}}}
-
-}
-
 func (c *clusterConfig) createCaBundleUpdateInitContainer(rgwConfig *rgwConfig) v1.Container {
 	caBundleMount := v1.VolumeMount{Name: caBundleVolumeName, MountPath: caBundleSourceCustomDir, ReadOnly: true}
 	volumeMounts := append(controller.DaemonVolumeMounts(c.DataPathMap, rgwConfig.ResourceName, c.clusterSpec.DataDirHostPath), caBundleMount)
@@ -370,7 +358,6 @@ func (c *clusterConfig) makeDaemonContainer(rgwConfig *rgwConfig) (v1.Container,
 		VolumeMounts: append(
 			controller.DaemonVolumeMounts(c.DataPathMap, rgwConfig.ResourceName, c.clusterSpec.DataDirHostPath),
 			c.mimeTypesVolumeMount(),
-			caVolumeMount(),
 		),
 		Env:             controller.DaemonEnvVars(c.clusterSpec),
 		Resources:       c.store.Spec.Gateway.Resources,
@@ -432,13 +419,6 @@ func (c *clusterConfig) makeDaemonContainer(rgwConfig *rgwConfig) (v1.Container,
 		container.VolumeMounts = append(container.VolumeMounts, vaultVolMount)
 	}
 	return container, nil
-}
-
-func caVolumeMount() v1.VolumeMount {
-	return v1.VolumeMount{
-		Name:      "cacerts",
-		MountPath: "/etc/pki/tls/certs",
-	}
 }
 
 // configureReadinessProbe returns the desired readiness probe for a given daemon

@@ -467,13 +467,8 @@ func (r *ReconcileCephObjectStore) reconcileCreateObjectStore(cephObjectStore *c
 			}
 		}
 
-		var caConfigMapName string
-		if ks := cephObjectStore.Spec.Auth.Keystone; ks != nil {
-			caConfigMapName = ks.CaConfigMapName
-		}
-
 		// Create or Update store
-		err = cfg.createOrUpdateStore(realmName, zoneGroupName, zoneName, keystoneSecret, caConfigMapName)
+		err = cfg.createOrUpdateStore(realmName, zoneGroupName, zoneName, keystoneSecret)
 		if err != nil {
 			return reconcile.Result{}, errors.Wrapf(err, "failed to create object store %q", cephObjectStore.Name)
 		}
