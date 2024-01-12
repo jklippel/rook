@@ -10697,6 +10697,8 @@ spec:
                           items:
                             type: string
                           type: array
+                        caConfigMapName:
+                          type: string
                         implicitTenants:
                           type: string
                         revocationInterval:
