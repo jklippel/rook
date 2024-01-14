@@ -52,7 +52,7 @@ func InstallKeystoneInTestCluster(shelper *utils.K8sHelper, namespace string) {
 
 	// add the cert-manager helm repo
 	logger.Infof("adding cert-manager helm repo")
-	cmdArgs := []string{"repo", "add", "cert-manager", "https://charts.jetstack.io"}
+	cmdArgs := []string{"repo", "add", "jetstack", "https://charts.jetstack.io"}
 	if _, err := helmHelper.Execute(cmdArgs...); err != nil {
 		// Continue on error in case the repo already was added
 		logger.Warningf("failed to add repo cert-manager, err=%v", err)
