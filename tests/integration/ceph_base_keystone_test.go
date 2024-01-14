@@ -754,7 +754,7 @@ func runSwiftE2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHe
 	})
 
 	t.Run("create container", func(t *testing.T) {
-		execInOpenStackClient(t, k8sh, namespace, false, "openstack container create foo")
+		execInOpenStackClient(t, k8sh, namespace, false, "openstack", "container", "create", "foo")
 	})
 	t.Run("create local testfile", func(t *testing.T) {
 		execInOpenStackClient(t, k8sh, namespace, false, "bash", "-c", "echo test-content > /tmp/testfile")
