@@ -749,8 +749,20 @@ func runSwiftE2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHe
 	t.Run("create unprivileged user in keystone", func(t *testing.T) {
 		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "user", "create", "--project", "testproject", "--password", "4l1c3", "alice")
 	})
-	t.Run("assign unprivilege user to test project (in keystone)", func(t *testing.T) {
+	t.Run("assign unprivileged user to test project (in keystone)", func(t *testing.T) {
 		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "role", "add", "--user", "alice", "--project", "testproject", "member")
+	})
+
+	t.Run("create service swift in keystone", func(t *testing.T) {
+		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "service", "create", "--name", "swift", "object-store")
+	})
+
+	t.Run("create internal swift endpoint in keystone", func(t *testing.T) {
+		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "endpoint", "create", "--region", "default", "--enable", "swift", "internal", "'http://rook-ceph-rgw-default.keystoneauth-ns.svc/swift/v1'")
+	})
+
+	t.Run("create admin swift endpoint in keystone", func(t *testing.T) {
+		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "endpoint", "create", "--region", "default", "--enable", "swift", "admin", "http://rook-ceph-rgw-default.keystoneauth-ns.svc/swift/v1")
 	})
 
 	t.Run("create container", func(t *testing.T) {
