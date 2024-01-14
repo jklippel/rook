@@ -766,11 +766,11 @@ func runSwiftE2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHe
 	})
 
 	t.Run("create internal swift endpoint in keystone", func(t *testing.T) {
-		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "endpoint", "create", "--region", "default", "--enable", "swift", "internal", "http://rook-ceph-rgw-default.keystoneauth-ns.svc/swift/v1")
+		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "endpoint", "create", "--region", "default", "--enable", "swift", "internal", "https://rook-ceph-rgw-default.keystoneauth-ns.svc:80/swift/v1")
 	})
 
 	t.Run("create admin swift endpoint in keystone", func(t *testing.T) {
-		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "endpoint", "create", "--region", "default", "--enable", "swift", "admin", "http://rook-ceph-rgw-default.keystoneauth-ns.svc/swift/v1")
+		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "endpoint", "create", "--region", "default", "--enable", "swift", "admin", "https://rook-ceph-rgw-default.keystoneauth-ns.svc:80/swift/v1")
 	})
 
 	t.Run("create container", func(t *testing.T) {
