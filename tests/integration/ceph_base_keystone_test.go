@@ -739,7 +739,7 @@ func runSwiftE2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHe
 	logger.Infof("test creating %s object store %q in namespace %q", andDeleting, storeName, namespace)
 
 	t.Run("create swift user for objectstore in keystone", func(t *testing.T) {
-		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "user", "create", "--enable", "--password", "5w1ft135", "--project", "admin", "--description", "swift admin account", "swift")
+		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "user", "create", "--enable", "--password", "5w1ft135", "--project", "admin", "--description", "swift admin account", "rook-user")
 	})
 
 	t.Run("make swift user admin", func(t *testing.T) {
