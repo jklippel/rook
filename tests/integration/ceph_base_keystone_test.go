@@ -302,8 +302,8 @@ spec:
       name: "root-secret"
       key: "tls.crt"
   target:
-    configMap:
-      key: "ca-bundle.crt"`
+    secret:
+      key: "cabundle"`
 
 }
 
@@ -316,7 +316,11 @@ func installHelmChart(helmHelper *utils.HelmHelper, namespace string, chartName 
 	if setting == "" {
 		_, err = helmHelper.Execute("upgrade", "--install", "--debug", "--namespace", namespace, chartName, "--set", "installCRDs=true", chart, "--version="+version, "--wait")
 	} else {
-		_, err = helmHelper.Execute("upgrade", "--install", "--debug", "--namespace", namespace, chartName, "--set", "installCRDs=true", chart, "--version="+version, "--wait", "--set", setting)
+		// TODO: make settings an string array or string...; move trust manager specific settings out of here
+		// This allows for secrets to be read/written by trust-manager in all namespaces
+		// This is considered insecure in production environments! This is here only for the quick test setup.
+		// TODO: maybe try to come up with the more secure solution of allowing secretTargets only in the rook-ceph namespace
+		_, err = helmHelper.Execute("upgrade", "--install", "--debug", "--namespace", namespace, chartName, "--set", "installCRDs=true", chart, "--version="+version, "--wait", "--set", setting, "--set", "secretTargets.enabled=true", "--set", "secretTargets.authorizedSecretsAll=true")
 	}
 	if err != nil {
 		logger.Errorf("failed to install helm chart %s with version %s in namespace: %v, err=%v", chart, version, namespace, err)
