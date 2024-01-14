@@ -87,7 +87,7 @@ func InstallKeystoneInTestCluster(shelper *utils.K8sHelper, namespace string) {
 		logger.Warningf("Could not create CA Certificate Bundle in namespace %s", namespace)
 	}
 
-	data := getKeystoneApache2CM()
+	data := getKeystoneApache2CM(namespace)
 
 	keystoneApacheCM := &v1.ConfigMap{
 		ObjectMeta: metav1.ObjectMeta{
@@ -187,7 +187,7 @@ spec:
         - name: OS_AUTH_TYPE
           value: password
         - name: OS_AUTH_URL
-          value: https://keystone.keystone.svc/v3
+          value: https://keystone.` + namespace + `.svc/v3
         - name: OS_IDENTITY_API_VERSION
           value: "3"
         - name: OS_PROJECT_DOMAIN_NAME
@@ -253,7 +253,7 @@ spec:
         - name: OS_AUTH_TYPE
           value: password
         - name: OS_AUTH_URL
-          value: https://keystone.keystone.svc/v3
+          value: https://keystone.` + namespace + `.svc/v3
         - name: OS_IDENTITY_API_VERSION
           value: "3"
         - name: OS_PROJECT_DOMAIN_NAME
@@ -652,7 +652,7 @@ enabled = false`
 
 }
 
-func getKeystoneApache2CM() map[string]string {
+func getKeystoneApache2CM(namespace string) map[string]string {
 
 	returnMap := make(map[string]string)
 
@@ -680,7 +680,7 @@ Listen 443
 ErrorLog "/proc/self/fd/2"
 
 <VirtualHost *:443>
-  ServerName keystone-api.keystone.svc
+  ServerName keystone-api.` + namespace + `.svc
   SSLEngine on
   SSLCertificateFile /etc/ssl/keystone/tls.crt
   SSLCertificateKeyFile /etc/ssl/keystone/tls.key
