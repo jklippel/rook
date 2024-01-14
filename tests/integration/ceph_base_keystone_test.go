@@ -139,13 +139,13 @@ func InstallKeystoneInTestCluster(shelper *utils.K8sHelper, namespace string) {
 	}
 
 	// TODO: check if job is still necessary (could be done with openstack client)
-	if err := shelper.ResourceOperation("apply", keystoneCreateUserJob(namespace)); err != nil {
-		logger.Warningf("Could not create job in namespace %s", namespace)
-	}
+	//if err := shelper.ResourceOperation("apply", keystoneCreateUserJob(namespace)); err != nil {
+	//	logger.Warningf("Could not create job in namespace %s", namespace)
+	//}
 
-	if _, err := executor.ExecuteCommandWithTimeout(315*time.Second, "kubectl", "wait", "--timeout=120s", "--namespace", namespace, "job", "--selector=job=setup-keystone", "--for=condition=Completed"); err != nil {
-		logger.Warningf("Failed to wait for job setup-keystone in namespace %s", namespace)
-	}
+	//if _, err := executor.ExecuteCommandWithTimeout(315*time.Second, "kubectl", "wait", "--timeout=120s", "--namespace", namespace, "job", "--selector=job=setup-keystone", "--for=condition=Completed"); err != nil {
+	//	logger.Warningf("Failed to wait for job setup-keystone in namespace %s", namespace)
+	//}
 
 	if err := shelper.ResourceOperation("apply", createOpenStackClient(namespace)); err != nil {
 		logger.Warningf("Could not create job in namespace %s", namespace)
@@ -738,13 +738,21 @@ func runSwiftE2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHe
 	}
 	logger.Infof("test creating %s object store %q in namespace %q", andDeleting, storeName, namespace)
 
+	t.Run("create swift user for objectstore in keystone", func(t *testing.T) {
+		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "user", "create", "--enable", "--password", "5w1ft135", "--project", "admin", "--description", "swift admin account", "swift")
+	})
+
+	t.Run("make swift user admin", func(t *testing.T) {
+		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "role", "add", "--user", "swift", "--project", "admin", "admin")
+	})
+
 	createCephObjectStore(t, helper, k8sh, installer, namespace, storeName, replicaSize, enableTLS, swiftAndKeystone)
 
 	// TODO: add swift integration tests here
 	// TODO: rename container from foo to test-container
 
 	t.Run("create test project in keystone", func(t *testing.T) {
-		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "project create", "testproject")
+		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "project", "create", "testproject")
 	})
 	t.Run("create unprivileged user in keystone", func(t *testing.T) {
 		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "user", "create", "--project", "testproject", "--password", "4l1c3", "alice")
