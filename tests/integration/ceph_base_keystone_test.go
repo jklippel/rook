@@ -161,7 +161,7 @@ func createUnPrivilegedOpenStackClient(namespace string) string {
 	return `apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: osc-alice
+  name: osc-unprivileged
   namespace: ` + namespace + `
 spec:
   progressDeadlineSeconds: 600
@@ -169,12 +169,12 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: osc-alice
+      app: osc-unprivileged
   template:
     metadata:
       creationTimestamp: null
       labels:
-        app: osc-alice
+        app: osc-unprivileged
     spec:
       containers:
       - command:
@@ -807,7 +807,7 @@ func execInOpenStackClient(t *testing.T, sh *utils.K8sHelper, namespace string, 
 	}
 
 	commandLine = append(commandLine, command...)
-	// kubectl exec -n keystone -ti deployment/osc-alice --
+	// kubectl exec -n keystone -ti deployment/osc-unprivileged --
 	output, err := sh.Kubectl(commandLine...)
 
 	if err != nil {
