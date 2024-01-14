@@ -743,7 +743,7 @@ func runSwiftE2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHe
 	})
 
 	t.Run("make swift user admin", func(t *testing.T) {
-		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "role", "add", "--user", "swift", "--project", "admin", "admin")
+		execInOpenStackClient(t, k8sh, namespace, true, "openstack", "role", "add", "--user", "rook-user", "--project", "admin", "admin")
 	})
 
 	createCephObjectStore(t, helper, k8sh, installer, namespace, storeName, replicaSize, enableTLS, swiftAndKeystone)
