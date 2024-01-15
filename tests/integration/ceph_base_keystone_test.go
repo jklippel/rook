@@ -709,21 +709,21 @@ TraceEnable Off`
 
 func CleanUpKeystoneInTestCluster(shelper *utils.K8sHelper, namespace string) {
 
-	// Un-Install keystone
-	//err := shelper.DeleteResource("-n", namespace, "configmap", "keystone-apache2-conf")
-	//if err != nil {
-	//	logger.Warningf("Could not delete configmap keystone-apache2-conf in namespace %s", namespace)
-	//}
+	// Un-Install keystone with yaook
+	err := shelper.DeleteResource("-n", namespace, "configmap", "keystone-apache2-conf")
+	if err != nil {
+		logger.Warningf("Could not delete configmap keystone-apache2-conf in namespace %s", namespace)
+	}
 
-	//err = shelper.DeleteResource("-n", namespace, "secret", "keystone-config")
-	//if err != nil {
-	//	logger.Warningf("Could not delete secret keystone-config in namespace %s", namespace)
-	//}
+	err = shelper.DeleteResource("-n", namespace, "secret", "keystone-config")
+	if err != nil {
+		logger.Warningf("Could not delete secret keystone-config in namespace %s", namespace)
+	}
 
-	//err = shelper.DeleteResource("-n", namespace, "deployment", "keystone-api")
-	//if err != nil {
-	//	logger.Warningf("Could not delete deployment keystone-api in namespace %s", namespace)
-	//}
+	err = shelper.DeleteResource("-n", namespace, "deployment", "keystone-api")
+	if err != nil {
+		logger.Warningf("Could not delete deployment keystone-api in namespace %s", namespace)
+	}
 
 	//cert-manager related resources (including certificates and secrets) are not removed here
 	//(as they will be removed anyway on uninstalling cert-manager)
