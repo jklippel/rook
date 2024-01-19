@@ -24,6 +24,7 @@ import (
 	"github.com/rook/rook/tests/framework/utils"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"strings"
 )
 
 const rgwPort = 80
@@ -79,7 +80,13 @@ func (o *ObjectOperation) Create(namespace, storeName string, replicaCount int32
 
 		_, err := o.k8sh.Clientset.CoreV1().Secrets(namespace).Create(testCtx, secret, metav1.CreateOptions{})
 		if err != nil {
-			return err
+
+			if !strings.Contains(err.Error(), "Reason:\"AlreadyExists\"") {
+
+				return err
+
+			}
+
 		}
 
 	}
