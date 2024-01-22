@@ -81,7 +81,7 @@ func (o *ObjectOperation) Create(namespace, storeName string, replicaCount int32
 		_, err := o.k8sh.Clientset.CoreV1().Secrets(namespace).Create(testCtx, secret, metav1.CreateOptions{})
 		if err != nil {
 
-			if !strings.Contains(err.Error(), "Reason:\"AlreadyExists\"") {
+			if !strings.Contains(err.Error(), "\"usersecret\" already exists") {
 
 				return err
 
