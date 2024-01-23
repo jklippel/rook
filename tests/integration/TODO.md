@@ -73,6 +73,8 @@ Der Test läuft auch durch.
 
 ## Schauen, warum das cephfs getestet wird
 
+Ich denke das läuft halt immer beim Aufsetzen mit.
+
 ## (done) OpenStack-Library (gophercloud) oder swift-Client verwenden?
 
 -> Weder noch, wir verwenden die OpenStack CLI in einem Pod
@@ -88,11 +90,11 @@ https://pkg.go.dev/github.com/gophercloud/gophercloud@v1.8.0/openstack/objectsto
 Das gibts alles noch nicht, bin mir aber nicht sicher, wie wir das außerhalb des Clusters testen wollen.
 Dann bräuchte es noch einen Ingress-Weg zum Keystone bzw. einen von extern erreichbaren Service.
 
-- Container anlegen
-- Datei in Container ablegen
-- Datei aus Container laden
+- (implementiert) Container anlegen
+- (implementiert) Datei in Container ablegen
+- (implementiert) Datei aus Container laden
 - Datei in Container löschen
-- Container löschen
+- (implementiert) Container löschen
 - unberechtigter Zugriff
 - berechtigte Zugriffe (Read, Write, Admin)
 - Smoke-Test? (many requests to keystone)
@@ -149,7 +151,7 @@ index 5cba689e2..21aa32ee8 100644
 
 In object.go die Funktion GetKeystoneUserSecret anpassen/variabler machen
 
-### Todos in ceph_object_test.go anschauen (Parameter swiftAndKeystone sind immer false)
+### (done) Todos in ceph_object_test.go anschauen (Parameter swiftAndKeystone sind immer false)
 
 ## Nebenschauplatz: tests/scripts/generate-tls-config.sh kubectl version --short schlägt fehl, denn es ist nicht mehr aktuell
 
@@ -158,12 +160,19 @@ Wir verwenden cert-manager / trust-manager
 
 ## (done) In einem Dokument runterschreiben, wie man die Test-Umgebung zum Fliegen bekommt
 
-## Wie kommt die CA-Certificate-ConfigMap in den CephObjectStore? (Funktionalitäts-Erweiterung NICHT mehr nur Test!)
+## (done) Wie kommt die CA-Certificate-ConfigMap in den CephObjectStore? (Funktionalitäts-Erweiterung NICHT mehr nur Test!)
 -> CRD anpassen, damit man den ConfigMap-Namen konfigurieren kann (per Default leer und dann wirds halt nicht gemounted)
 -> Pod/Deployment anpassen, damit die konfigurierte ConfigMap verwendet wird
+Es gibt eine Funktionalität, die verwendet allerdings Secrets. Deshalb ist es jetzt mit trustmanager und secrets in allen
+Namespace implementiert. Die Einschränkung auf einen Namespace hat nicht auf Anhieb funktioniert. Ich denke für die
+Tests ist das auch nicht erforderlich.
 
 ## S3 Credentials in Keystone anlegen anstelle des ObjectStoreUsers aus den normalen Tests
 -> Access keys aus Keystone in das jetzige Secret legen(?)
 
-## Tests in Openstack-Client implementieren (CLI verwenden)
-Nicht über GopherCloud sondern direkt die OpenStack CLI verwenden (das ist schlie0lich dass was später auch verwendet wird)
+## (done) Tests in Openstack-Client implementieren (CLI verwenden)
+Nicht über GopherCloud sondern direkt die OpenStack CLI verwenden (das ist schließlich dass was später auch verwendet wird)
+
+## (done) gateway.caBundleRef verwenden anstatt caConfigMapName
+Das ist dann aber ein Secret und deshalb wird die Verwendung von Trust-Manager wieder fraglich.
+(Da kann man ja auch mal nachschauen, wie das umgesetzt ist und warum es ein Secret sein muss.)
