@@ -4,84 +4,9 @@ This file is a todo list for the implementation of integration tests for the roo
 
 ## Keystone-Deployment hinzufügen
 
-### (done) Via Yaook-Operator oder abgestript via Manifest-Dateien
-
-ja, Tendenz: abgestrippte Manifest-Dateien (siehe nächster Abschnitt)
-
-### (done) abgestrippte Manifest-Dateien
-
-Ich hab jetzt eine Keystone-Deployment-Version ohne Yaook aber mit TLS.
-
-Das findet sich im rook-minikube-keystone repository unter resources/keystone-only.
-
-Da gibt es zwei Skripte:
-
-- provision-keystone.sh
-- deprovision-keystone.sh
-
-Das legt Keystone ohne Yaook im Rook-Test/Dev-Minikube Cluster an. Inklusive Cert-Manager-Installation und ca-issuer.
-
-Das kann man mit `kubectl apply -n keystone -f osc.yaml` ebenfalls deployen.
-Credentials und die notwendige Variable zur CA-Datei sind bereits im Environment des Deployments enthalten.
-
-Eine Shell im Pod starten:
-
-```sh
-kubectl exec -n keystone -ti deployment/osc -- bash
-```
-Dann kann man, wenn der keystone-api Pod "Ready" ist, mit dem OpenStack Client auf das Keystone zugreifen.
-
-```sh
-openstack endpoint list
-```
-
-und auch User anlegen:
-
-```sh
-openstack user create alice --password 4l1c3
-```
-** alice heißt jetzt rook-user sonst ändert sich nix
-
-### (done) TLS muss drin bleiben
-
-Ja, ist noch drin. Ich habs direkt in den Apache eingebaut (siehe Datei `apache2.conf`).
-Das man den Cert-Manager braucht find ich grad noch etwas unschön.
-
-### (done) SQLite reicht aus
-
-Ja, keystone verwendet jetzt sqlite. (siehe `keystone.conf`)
-Die Datenbank wird von einem Init-Container befüllt.
-Ein weiterer Init-Container legt die ersten Endpoints an.
-
-### (done) keystone-manage bootstrap in init-Container?
-Ist integriert. Das ist der, der die ersten Init-Container anlegt.
-
-### (done) Präferenz: Wenns klein geht mittels Manifest-Dateien
-
-Ja ich denke es ist recht übersichtlich geworden. Die Cert-Manager Installation find ich noch nicht so toll,
-aber zum Starten reichts auf jeden Fall.
-
-### (done) Integration der Manifest-Dateien in rook-Integration-Test
-
-### (done) Keystone-Only-Deployment in `ceph_base_keystone.go` übertragen.
-
-Alle Resourcen sind in `ceph_base_keystone_test.go` integriert.
-
-Der Test läuft auch durch.
-
-### (done) Das keystone-api-Deployment wird angelegt und dann wieder gelöscht.
-
 ## Schauen, warum das cephfs getestet wird
 
 Ich denke das läuft halt immer beim Aufsetzen mit.
-
-## (done) OpenStack-Library (gophercloud) oder swift-Client verwenden?
-
--> Weder noch, wir verwenden die OpenStack CLI in einem Pod
-
-https://github.com/ncw/swift
-oder
-https://pkg.go.dev/github.com/gophercloud/gophercloud@v1.8.0/openstack/objectstorage/v1/containers
 
 ## Was wollen wir testen?
 
@@ -151,28 +76,7 @@ index 5cba689e2..21aa32ee8 100644
 
 In object.go die Funktion GetKeystoneUserSecret anpassen/variabler machen
 
-### (done) Todos in ceph_object_test.go anschauen (Parameter swiftAndKeystone sind immer false)
-
 ## Nebenschauplatz: tests/scripts/generate-tls-config.sh kubectl version --short schlägt fehl, denn es ist nicht mehr aktuell
-
-## (done) Wie kommt die self-signed ca.crt in den example-Store?
-Wir verwenden cert-manager / trust-manager
-
-## (done) In einem Dokument runterschreiben, wie man die Test-Umgebung zum Fliegen bekommt
-
-## (done) Wie kommt die CA-Certificate-ConfigMap in den CephObjectStore? (Funktionalitäts-Erweiterung NICHT mehr nur Test!)
--> CRD anpassen, damit man den ConfigMap-Namen konfigurieren kann (per Default leer und dann wirds halt nicht gemounted)
--> Pod/Deployment anpassen, damit die konfigurierte ConfigMap verwendet wird
-Es gibt eine Funktionalität, die verwendet allerdings Secrets. Deshalb ist es jetzt mit trustmanager und secrets in allen
-Namespace implementiert. Die Einschränkung auf einen Namespace hat nicht auf Anhieb funktioniert. Ich denke für die
-Tests ist das auch nicht erforderlich.
 
 ## S3 Credentials in Keystone anlegen anstelle des ObjectStoreUsers aus den normalen Tests
 -> Access keys aus Keystone in das jetzige Secret legen(?)
-
-## (done) Tests in Openstack-Client implementieren (CLI verwenden)
-Nicht über GopherCloud sondern direkt die OpenStack CLI verwenden (das ist schließlich dass was später auch verwendet wird)
-
-## (done) gateway.caBundleRef verwenden anstatt caConfigMapName
-Das ist dann aber ein Secret und deshalb wird die Verwendung von Trust-Manager wieder fraglich.
-(Da kann man ja auch mal nachschauen, wie das umgesetzt ist und warum es ein Secret sein muss.)
