@@ -2,9 +2,9 @@
 
 This file is a todo list for the implementation of integration tests for the rook/ceph/swift with keystone functionality.
 
-## Keystone-Deployment hinzufügen
+## (done) Keystone-Deployment hinzufügen
 
-## Schauen, warum das cephfs getestet wird
+## (done) Schauen, warum das cephfs getestet wird
 
 Ich denke das läuft halt immer beim Aufsetzen mit.
 
@@ -40,13 +40,22 @@ Dann bräuchte es noch einen Ingress-Weg zum Keystone bzw. einen von extern erre
 
 ## Spezifikation lesen und schauen ob wir alles abgedeckt haben
 
-## Ceph-Swift-Dokumentation anschauen und verbessern
-
 ## nach erstem rudimentären mal den PR aufmachen und die Community einbinden
 
-## einen Blick auf Coverage werfen
+### GetKeystoneUserSecret anpassen
 
-## Schauen, warum das ceph_manifest.go Dinge verwenden möchte, die nicht im CRD sind
+In object.go die Funktion GetKeystoneUserSecret anpassen/variabler machen
+
+## S3 Credentials in Keystone anlegen anstelle des ObjectStoreUsers aus den normalen Tests
+-> Access keys aus Keystone in das jetzige Secret legen(?)
+
+##  (low-prio) Nebenschauplatz: tests/scripts/generate-tls-config.sh kubectl version --short schlägt fehl, denn es ist nicht mehr aktuell
+
+## (low-prio) Ceph-Swift-Dokumentation anschauen und verbessern
+
+## (low-prio) einen Blick auf Coverage werfen
+
+##  (low-prio) Schauen, warum das ceph_manifest.go Dinge verwenden möchte, die nicht im CRD sind
 
 ```
 diff --git a/tests/framework/installer/ceph_manifests.go b/tests/framework/installer/ceph_manifests.go
@@ -71,12 +80,3 @@ index 5cba689e2..21aa32ee8 100644
  }
 
 ```
-
-### GetKeystoneUserSecret anpassen
-
-In object.go die Funktion GetKeystoneUserSecret anpassen/variabler machen
-
-## Nebenschauplatz: tests/scripts/generate-tls-config.sh kubectl version --short schlägt fehl, denn es ist nicht mehr aktuell
-
-## S3 Credentials in Keystone anlegen anstelle des ObjectStoreUsers aus den normalen Tests
--> Access keys aus Keystone in das jetzige Secret legen(?)
