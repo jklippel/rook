@@ -54,10 +54,6 @@ func (o *ObjectOperation) Create(namespace, storeName string, replicaCount int32
 
 	if swiftAndKeystone {
 
-		//if err := o.k8sh.ResourceOperation("apply", GetKeystoneUserSecret(namespace)); err != nil {
-		//	return err
-		//}
-
 		testCtx := context.TODO()
 
 		secrets := map[string][]byte{
@@ -103,24 +99,6 @@ func (o *ObjectOperation) Create(namespace, storeName string, replicaCount int32
 
 	// create the external service
 	return o.k8sh.CreateExternalRGWService(namespace, storeName)
-}
-
-func GetKeystoneUserSecret(namespace string) string {
-
-	return `apiVersion: v1
-data:
-  OS_AUTH_TYPE: cGFzc3dvcmQ=
-  OS_IDENTITY_API_VERSION: Mw==
-  OS_PROJECT_DOMAIN_NAME: RGVmYXVsdA==
-  OS_USER_DOMAIN_NAME: RGVmYXVsdA==
-  OS_PROJECT_NAME: YWRtaW4=
-  OS_USERNAME: cm9vay11c2Vy
-  OS_PASSWORD: NXcxZnQxMzU=
-kind: Secret
-metadata:
-  name: usersecret
-  namespace: ` + namespace
-
 }
 
 func (o *ObjectOperation) Delete(namespace, storeName string) error {
