@@ -2,8 +2,14 @@
 
 This file is a todo list for the implementation of integration tests for the rook/ceph/swift with keystone functionality.
 
-## github-Test-Thema anschauen (jakl)
-- Warum laufen die Tests nicht mehr durch (und werden als gecanceld angezeigt)
+## github-Test-Thema anschauen (jan)
+- Warum laufen die Tests nicht mehr durch (und werden als gecanceled angezeigt)
+-> USE_TMATE Secret entfernt
+- https://github.com/jklippel/rook/pull/1/commits/14105bef7e76afd198158ac21935bf60270011e3 hat das Problem gelöst (cherry-picked von upstream/master)
+
+## Refactor: installHelmChart (ceph_base_keystone_test.go) (jan) 
+- Refactor: Helm-Chart Installations-Funktion installHelmChart wurde um trust-manager spezifische Sachen erweitert, das
+  sollte nicht so sein.
 
 ## Was wollen wir testen?
 
@@ -19,8 +25,6 @@ Dann bräuchte es noch einen Ingress-Weg zum Keystone bzw. einen von extern erre
 - (implementiert) Container löschen
 - unberechtigter Zugriff (jan)
 - berechtigte Zugriffe (Read-only, Write-only(?), Admin?) (jan)
-
-- (done) Smoke-Test? (many requests to keystone) (lassen wir weg)
 
 ### S3 (silvio)
 
