@@ -568,7 +568,7 @@ func (r *ReconcileCephObjectStore) reconcileCOSIUser(cephObjectStore *cephv1.Cep
 	}
 
 	// Create COSI user secret
-	return ReconcileCephUserSecrets(r.opManagerContext, r.client, r.scheme, cephObjectStore, &user, objCtx.Endpoint, cephObjectStore.Namespace, cephObjectStore.Name, cephObjectStore.Spec.Gateway.SSLCertificateRef)
+	return ReconcileCephUserSecret(r.opManagerContext, r.client, r.scheme, cephObjectStore, &user, objCtx.Endpoint, cephObjectStore.Namespace, cephObjectStore.Name, cephObjectStore.Spec.Gateway.SSLCertificateRef)
 }
 
 func generateCOSIUserConfig() *admin.User {
