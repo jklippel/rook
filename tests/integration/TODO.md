@@ -42,8 +42,8 @@ Wie testen wir das? (mit welchem S3-Client?, kann man das mit openstack-cli mach
 ## CephObjektStoreUser + Subuser (silvio)
 
 - Was machen wir mit der Funktionalität?
-- Trennen wir den MR/PR/Branch auf? --> ja
-- Testen wir diese Funktionalität auch? --> in einem weiteren PR
+- (done) Trennen wir den MR/PR/Branch auf? --> ja
+- (done) Testen wir diese Funktionalität auch? --> in einem weiteren PR
 
 ## Spezifikation lesen und schauen ob wir alles abgedeckt haben (jan/silvio)
 
