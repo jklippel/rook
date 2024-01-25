@@ -2,12 +2,6 @@
 
 This file is a todo list for the implementation of integration tests for the rook/ceph/swift with keystone functionality.
 
-## (done) Keystone-Deployment hinzufügen
-
-## (done) Schauen, warum das cephfs getestet wird
-
-Ich denke das läuft halt immer beim Aufsetzen mit.
-
 ## Was wollen wir testen?
 
 ### Swift
