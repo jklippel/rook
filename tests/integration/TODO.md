@@ -2,9 +2,8 @@
 
 This file is a todo list for the implementation of integration tests for the rook/ceph/swift with keystone functionality.
 
-## github-Test-Thema anschauen (jan)
+## (done) github-Test-Thema anschauen (jan)
 - Warum laufen die Tests nicht mehr durch (und werden als gecanceled angezeigt)
--> USE_TMATE Secret entfernt
 - https://github.com/jklippel/rook/pull/1/commits/14105bef7e76afd198158ac21935bf60270011e3 hat das Problem gelöst (cherry-picked von upstream/master)
 
 ## Refactor: installHelmChart (ceph_base_keystone_test.go) (jan) 
@@ -61,7 +60,7 @@ In object.go die Funktion GetKeystoneUserSecret anpassen/variabler machen
 
 ## (low-prio) einen Blick auf Coverage werfen
 
-##  (low-prio) Schauen, warum das ceph_manifest.go Dinge verwenden möchte, die nicht im CRD sind
+## (low-prio) Schauen, warum das ceph_manifest.go Dinge verwenden möchte, die nicht im CRD sind
 
 ```
 diff --git a/tests/framework/installer/ceph_manifests.go b/tests/framework/installer/ceph_manifests.go
@@ -86,3 +85,8 @@ index 5cba689e2..21aa32ee8 100644
  }
 
 ```
+
+## (low-prio) Brauchen wir ein neueres Keystone als Yoga?
+
+Das letzte Yaook-Image ist für Yoga, aber man könnte da ruhig auch ein paar neuere bauen.
+(Ist mir beim Doku-Lesen aufgefallen :)
