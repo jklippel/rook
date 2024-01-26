@@ -505,7 +505,7 @@ spec:
         - admin
         - member
         - service
-      implicitTenants: "swift"
+      implicitTenants: "true"
       revocationInterval: 1200
       serviceUserSecretName: usersecret
       tokenCacheSize: 1000
@@ -514,6 +514,9 @@ spec:
     swift:
       accountInUrl: true
       urlPrefix: /swift
+    s3:
+      enabled: true
+      authUseKeystone: true
   {{ end }}
   gateway:
     resources: null
