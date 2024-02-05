@@ -1104,8 +1104,6 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 
 	prepareE2ETest(t, helper, k8sh, installer, namespace, storeName, replicaSize, deleteStore, enableTLS, swiftAndKeystone, testContainerName)
 
-	// test with user with read+write access (member-role)
-
 	t.Run("create container (with user being a member)", func(t *testing.T) {
 
 		testInOpenStackClient(t, k8sh, namespace,
@@ -1114,9 +1112,6 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 		)
 
 	})
-
-	// S3 specific stuff starts here
-	// TODO: put above in function
 
 	t.Run("create AWS config file", func(t *testing.T) {
 		testInOpenStackClient(t, k8sh, namespace,
