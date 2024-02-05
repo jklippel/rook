@@ -98,3 +98,25 @@ Das letzte Yaook-Image ist für Yoga, aber man könnte da ruhig auch ein paar ne
 ## COSI-Fehler / wo kommen die her?
 failed to reconcile CephObjectStore "keystoneauth-ns/default". failed to create object store deployments: failed to get COSI user "cosi": Get "http://rook-ceph-rgw-default.keystoneauth-ns.svc:80/admin/user?format=json&uid=cosi": dial tcp 10.106.142.173:80: connect: connection refused
 
+## Da gibts einen TODO in controller_test.go
+https://github.com/jklippel/rook/commit/fbc4c59b6a71d0e46bdae9d529b253202c0f611b
+Was machen wir mit dem?
+
+## object / config.go - sollen wir die Fehlermeldungen testen?
+funktion mapKeystoneSecretToConfig; fehlende Parameter etc.
+
+
+## (done) operator/ceph/object/config.go
+Da ist ein Todo in config.go:
+```go
+if ks.ImplicitTenants != "" {
+// XXX: where do we validate this?
+```
+
+## pkg/operator/ceph/object/config.go 
+259 ff. Da ist noch ein Todo:
+nach s3disabled // XXX: how to handle enabled APIs? 
+
+## TODO in pkg/operator/ceph/object/rgw.go:162
+Fehlerbehandlung überdenken
+
