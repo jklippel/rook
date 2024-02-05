@@ -1122,7 +1122,7 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 	t.Run("List bucket with S3", func(t *testing.T) {
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
-			"bash", "-c", "aws --endpoint-url=http://rook-ceph-rgw-examplestore."+namespace+".svc s3api list-buckets | jq '.Buckets | .[].Name' -r | grep foo",
+			"bash", "-c", "aws --endpoint-url=http://rook-ceph-rgw-examplestore."+namespace+".svc s3api list-buckets | jq '.Buckets | .[].Name' -r | grep "+testContainerName,
 		)
 
 	})
@@ -1134,7 +1134,7 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
-			"openstack", "object", "create", "foo", "testfile2")
+			"openstack", "object", "create", ""+testContainerName+"", "testfile2")
 
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
@@ -1152,7 +1152,7 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
-			"bash", "-c", "aws --endpoint-url=http://rook-ceph-rgw-examplestore."+namespace+".svc s3 cp /tmp/testfile s3://foo/testfile",
+			"bash", "-c", "aws --endpoint-url=http://rook-ceph-rgw-examplestore."+namespace+".svc s3 cp /tmp/testfile s3://"+testContainerName+"/testfile",
 		)
 
 	})
@@ -1160,7 +1160,7 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 	t.Run("save testfile object from container to local disk", func(t *testing.T) {
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
-			"bash", "-c", "aws --endpoint-url=http://rook-ceph-rgw-examplestore."+namespace+".svc s3 cp s3://foo/testfile /tmp/testfile.saved")
+			"bash", "-c", "aws --endpoint-url=http://rook-ceph-rgw-examplestore."+namespace+".svc s3 cp s3://"+testContainerName+"/testfile /tmp/testfile.saved")
 	})
 
 	t.Run("check testfile", func(t *testing.T) {
@@ -1172,7 +1172,7 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 	t.Run("delete object in container", func(t *testing.T) {
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
-			"bash", "-c", "aws --endpoint-url=http://rook-ceph-rgw-examplestore."+namespace+".svc s3 rm s3://foo/testfile")
+			"bash", "-c", "aws --endpoint-url=http://rook-ceph-rgw-examplestore."+namespace+".svc s3 rm s3://"+testContainerName+"/testfile")
 	})
 
 	cleanupE2ETest(t, k8sh, namespace, storeName, deleteStore, testContainerName)
