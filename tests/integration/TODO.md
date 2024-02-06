@@ -2,15 +2,6 @@
 
 This file is a todo list for the implementation of integration tests for the rook/ceph/swift with keystone functionality.
 
-## (done) github-Test-Thema anschauen (jan)
-- Warum laufen die Tests nicht mehr durch (und werden als gecanceled angezeigt)
-- https://github.com/jklippel/rook/pull/1/commits/14105bef7e76afd198158ac21935bf60270011e3 hat das Problem gelöst (cherry-picked von upstream/master)
-- Nach einigen guten Durchläufen laufen die Tests jetzt wieder nicht mehr.
-
-## (done) Refactor: installHelmChart (ceph_base_keystone_test.go) (jan) 
-- Refactor: Helm-Chart Installations-Funktion installHelmChart wurde um trust-manager spezifische Sachen erweitert, das
-  sollte nicht so sein.
-
 ## Was wollen wir testen?
 
 ### Swift 
@@ -106,24 +97,3 @@ Upstream tests nochmal anschauen
 https://github.com/jklippel/rook/commit/fbc4c59b6a71d0e46bdae9d529b253202c0f611b
 Was machen wir mit dem?
 -> rausmachen, test laufen lassen
-
-## (done) object / config.go - sollen wir die Fehlermeldungen testen? (Jan)
-funktion mapKeystoneSecretToConfig; fehlende Parameter etc.
--> abwarten, was der Reviewer sagt
-
-## (done) operator/ceph/object/config.go (Jan)
-Da ist ein Todo in config.go:
-```go
-if ks.ImplicitTenants != "" {
-// XXX: where do we validate this?
-```
-
-## (done) pkg/operator/ceph/object/config.go 
-259 ff. Da ist noch ein Todo:
-nach s3disabled // XXX: how to handle enabled APIs?
-
-Lassen wir für upstream/review drin.
-
-## (done) TODO in pkg/operator/ceph/object/rgw.go:162
-Fehlerbehandlung überdenken
-
