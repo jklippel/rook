@@ -2,8 +2,9 @@ package integration
 
 import (
 	"context"
-	v1 "k8s.io/api/core/v1"
 	"testing"
+
+	v1 "k8s.io/api/core/v1"
 
 	"github.com/rook/rook/tests/framework/clients"
 	"github.com/rook/rook/tests/framework/installer"
@@ -95,8 +96,8 @@ func (h *KeystoneAuthSuite) SetupSuite() {
 }
 
 func (h *KeystoneAuthSuite) TearDownSuite() {
-	CleanUpKeystoneInTestCluster(h.k8shelper, h.settings.Namespace)
-	h.installer.UninstallRook()
+	// CleanUpKeystoneInTestCluster(h.k8shelper, h.settings.Namespace)
+	// h.installer.UninstallRook()
 }
 
 func (h *KeystoneAuthSuite) AfterTest(suiteName, testName string) {
