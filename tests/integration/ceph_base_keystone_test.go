@@ -21,7 +21,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/rook/rook/pkg/util/exec"
 	"github.com/rook/rook/tests/framework/clients"
 	"github.com/rook/rook/tests/framework/installer"
 	"github.com/rook/rook/tests/framework/utils"
