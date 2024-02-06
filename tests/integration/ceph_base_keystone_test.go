@@ -969,6 +969,15 @@ func runSwiftE2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHe
 
 	})
 
+	// try deleting container (with rook-user, expect: success)
+	t.Run("delete container (admin-user)", func(t *testing.T) {
+
+		testInOpenStackClient(t, k8sh, namespace,
+			testProjectName, "carol", true,
+			"openstack", "container", "delete", testContainerName,
+		)
+	})
+
 	cleanupE2ETest(t, k8sh, namespace, storeName, deleteStore, testContainerName)
 }
 
@@ -1067,15 +1076,6 @@ func prepareE2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHel
 }
 
 func cleanupE2ETest(t *testing.T, k8sh *utils.K8sHelper, namespace, storeName string, deleteStore bool, testContainerName string) {
-	// try deleting container (with rook-user, expect: success)
-	t.Run("delete container (admin-user)", func(t *testing.T) {
-
-		testInOpenStackClient(t, k8sh, namespace,
-			testProjectName, "carol", true,
-			"openstack", "container", "delete", testContainerName,
-		)
-	})
-
 	if deleteStore {
 
 		t.Run("delete object store", func(t *testing.T) {
