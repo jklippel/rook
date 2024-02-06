@@ -2,7 +2,7 @@
 
 This file is a todo list for the implementation of integration tests for the rook/ceph/swift with keystone functionality.
 
-## github-Test-Thema anschauen (jan)
+## (done) github-Test-Thema anschauen (jan)
 - Warum laufen die Tests nicht mehr durch (und werden als gecanceled angezeigt)
 - https://github.com/jklippel/rook/pull/1/commits/14105bef7e76afd198158ac21935bf60270011e3 hat das Problem gelöst (cherry-picked von upstream/master)
 - Nach einigen guten Durchläufen laufen die Tests jetzt wieder nicht mehr.
@@ -52,11 +52,11 @@ dass man nicht alles in einem PR implementieren muss.
 
 ## nach erstem rudimentären mal den PR aufmachen und die Community einbinden
 
-## GetKeystoneUserSecret anpassen (jan)
+## (wip) GetKeystoneUserSecret anpassen (jan)
 
 In object.go die Funktion GetKeystoneUserSecret anpassen/variabler machen
 
-## Refaktor: ceph_base_keystone_test.go credentials in Konstanten auslagern (jan)
+## (wip) Refaktor: ceph_base_keystone_test.go credentials in Konstanten auslagern (jan)
 
 ##  (low-prio) Nebenschauplatz: tests/scripts/generate-tls-config.sh kubectl version --short schlägt fehl, denn es ist nicht mehr aktuell
 
@@ -90,33 +90,40 @@ index 5cba689e2..21aa32ee8 100644
 
 ```
 
-## (low-prio) Brauchen wir ein neueres Keystone als Yoga?
+## (low-prio) Brauchen wir ein neueres Keystone als Yoga? (Jan)
 
 Das letzte Yaook-Image ist für Yoga, aber man könnte da ruhig auch ein paar neuere bauen.
 (Ist mir beim Doku-Lesen aufgefallen :)
+https://gitlab.com/yaook/images/keystone/-/merge_requests/100
 
-## COSI-Fehler / wo kommen die her?
+
+## COSI-Fehler / wo kommen die her? (jan)
 failed to reconcile CephObjectStore "keystoneauth-ns/default". failed to create object store deployments: failed to get COSI user "cosi": Get "http://rook-ceph-rgw-default.keystoneauth-ns.svc:80/admin/user?format=json&uid=cosi": dial tcp 10.106.142.173:80: connect: connection refused
 
-## Da gibts einen TODO in controller_test.go
+Upstream tests nochmal anschauen
+
+## Da gibts einen TODO in controller_test.go (jan)
 https://github.com/jklippel/rook/commit/fbc4c59b6a71d0e46bdae9d529b253202c0f611b
 Was machen wir mit dem?
+-> rausmachen, test laufen lassen
 
-## object / config.go - sollen wir die Fehlermeldungen testen?
+## (done) object / config.go - sollen wir die Fehlermeldungen testen? (Jan)
 funktion mapKeystoneSecretToConfig; fehlende Parameter etc.
+-> abwarten, was der Reviewer sagt
 
-
-## (done) operator/ceph/object/config.go
+## (done) operator/ceph/object/config.go (Jan)
 Da ist ein Todo in config.go:
 ```go
 if ks.ImplicitTenants != "" {
 // XXX: where do we validate this?
 ```
 
-## pkg/operator/ceph/object/config.go 
+## (done) pkg/operator/ceph/object/config.go 
 259 ff. Da ist noch ein Todo:
-nach s3disabled // XXX: how to handle enabled APIs? 
+nach s3disabled // XXX: how to handle enabled APIs?
 
-## TODO in pkg/operator/ceph/object/rgw.go:162
+Lassen wir für upstream/review drin.
+
+## (done) TODO in pkg/operator/ceph/object/rgw.go:162
 Fehlerbehandlung überdenken
 
