@@ -24,6 +24,7 @@ import (
 	"github.com/rook/rook/tests/framework/clients"
 	"github.com/rook/rook/tests/framework/installer"
 	"github.com/rook/rook/tests/framework/utils"
+	"github.com/sethvargo/go-password/password"
 	"github.com/stretchr/testify/assert"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -37,41 +38,46 @@ var testuserdata = map[string]map[string]string{
 	"admin": {
 		"description": "keystone admin account",
 		"username":    "admin",
-		"password":    "s3cr3t",
-		"project":     "admin",
-		"role":        "admin",
+		//"password":    "s3cr3t",
+		"project": "admin",
+		"role":    "admin",
 	},
 	"rook-user": {
 		"description": "swift admin account",
-		"password":    "5w1ft135",
-		"project":     "admin",
-		"username":    "rook-user",
-		"role":        "admin",
+		//		"password":    "",
+		"project":  "admin",
+		"username": "rook-user",
+		"role":     "admin",
 	},
 	"alice": {
 		"description": "normal user account",
 		"username":    "alice",
-		"password":    "4l1c3",
-		"project":     testProjectName,
-		"role":        "member",
+		//		"password":    "4l1c3",
+		"project": testProjectName,
+		"role":    "member",
 	},
 	"carol": {
 		"description": "normal user account",
 		"username":    "carol",
-		"password":    "n0tth3xm45",
-		"project":     testProjectName,
-		"role":        "admin",
+		//		"password":    "n0tth3xm45",
+		"project": testProjectName,
+		"role":    "admin",
 	},
 	"mallory": {
 		"description": "bad actor user",
 		"username":    "mallory",
-		"password":    "b4db0y4l1f3",
-		"project":     testProjectName,
-		"role":        "",
+		//		"password":    "b4db0y4l1f3",
+		"project": testProjectName,
+		"role":    "",
 	},
 }
 
 func InstallKeystoneInTestCluster(shelper *utils.K8sHelper, namespace string) error {
+
+	if err := initializePasswords(); err != nil {
+
+		return err
+	}
 
 	ctx := context.TODO()
 
@@ -180,7 +186,7 @@ func InstallKeystoneInTestCluster(shelper *utils.K8sHelper, namespace string) er
 		return err
 	}
 
-	if err := shelper.ResourceOperation("apply", keystoneDeployment(namespace)); err != nil {
+	if err := shelper.ResourceOperation("apply", keystoneDeployment(namespace, testuserdata["admin"]["password"])); err != nil {
 		logger.Errorf("Could not create keystone deployment in namespace %s", namespace)
 		return err
 	}
@@ -205,6 +211,25 @@ func InstallKeystoneInTestCluster(shelper *utils.K8sHelper, namespace string) er
 		if err := shelper.ResourceOperation("apply", createOpenStackClient(namespace, userdata["project"], userdata["username"], userdata["password"])); err != nil {
 			logger.Errorf("Could not create openstack client deployment in namespace %s", namespace)
 			return err
+		}
+
+	}
+
+	return nil
+
+}
+
+func initializePasswords() error {
+
+	for user, _ := range testuserdata {
+
+		var err error
+
+		if testuserdata[user]["password"], err = password.Generate(20, 2, 2, false, false); err != nil {
+
+			logger.Errorf("Failed to initialize password for user %s: %s", user, err)
+			return err
+
 		}
 
 	}
@@ -425,7 +450,7 @@ spec:
 
 }
 
-func keystoneDeployment(namespace string) string {
+func keystoneDeployment(namespace string, adminpassword string) string {
 
 	return `apiVersion: apps/v1
 kind: Deployment
@@ -471,7 +496,7 @@ spec:
           runAsUser: 2500001
       - name: init-keystone-endpoint
         image: registry.yaook.cloud/yaook/keystone-yoga:3.0.30
-        command: [ 'sh', '-c', 'keystone-manage bootstrap --bootstrap-password s3cr3t --bootstrap-username admin --bootstrap-project-name admin --bootstrap-role-name admin --bootstrap-service-name keystone --bootstrap-region-id RegionOne --bootstrap-admin-url https://keystone.` + namespace + `.svc --bootstrap-internal-url https://keystone.` + namespace + `.svc']
+        command: [ 'sh', '-c', 'keystone-manage bootstrap --bootstrap-password ` + adminpassword + ` --bootstrap-username admin --bootstrap-project-name admin --bootstrap-role-name admin --bootstrap-service-name keystone --bootstrap-region-id RegionOne --bootstrap-admin-url https://keystone.` + namespace + `.svc --bootstrap-internal-url https://keystone.` + namespace + `.svc']
         volumeMounts:
         - mountPath: /etc/keystone/keystone.conf
           name: keystone-config-vol
