@@ -282,7 +282,7 @@ spec:
         - name: OS_USERNAME
           value: ` + username + `
         - name: OS_PASSWORD
-          value: ` + password + `
+          value: "` + password + `"
         imagePullPolicy: IfNotPresent
         name: openstackclient
         resources: {}
