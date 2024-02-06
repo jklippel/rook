@@ -225,7 +225,7 @@ func initializePasswords() error {
 
 		var err error
 
-		if testuserdata[user]["password"], err = password.Generate(20, 2, 2, false, false); err != nil {
+		if testuserdata[user]["password"], err = password.Generate(20, 2, 0, false, false); err != nil {
 
 			logger.Errorf("Failed to initialize password for user %s: %s", user, err)
 			return err
