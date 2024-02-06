@@ -1065,7 +1065,7 @@ func cleanupE2ETest(t *testing.T, k8sh *utils.K8sHelper, namespace, storeName st
 
 			// remove user secret
 			if _, err := k8sh.KubectlWithTimeout(30, "delete", "-n", namespace, "secret", "usersecret"); err != nil {
-				logger.Warningf("Could not remove user secret ", err)
+				logger.Warningf("Could not remove user secret: %s", err)
 			}
 
 		})
