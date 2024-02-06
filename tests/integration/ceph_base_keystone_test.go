@@ -20,7 +20,6 @@ import (
 	"context"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/rook/rook/pkg/util/exec"
 	"github.com/rook/rook/tests/framework/clients"
