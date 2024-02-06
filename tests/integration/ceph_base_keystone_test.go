@@ -1130,6 +1130,17 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
 			"bash", "-c", "aws --endpoint-url=http://"+RgwServiceName(storeName)+"."+namespace+".svc s3 rm s3://"+testContainerName+"/testfile")
+		testInOpenStackClient(t, k8sh, namespace,
+			testProjectName, "alice", true,
+			"bash", "-c", "aws --endpoint-url=http://"+RgwServiceName(storeName)+"."+namespace+".svc s3 rm s3://"+testContainerName+"/testfile2")
+	})
+
+	t.Run("delete container (admin-user)", func(t *testing.T) {
+
+		testInOpenStackClient(t, k8sh, namespace,
+			testProjectName, "alice", true,
+			"openstack", "container", "delete", testContainerName,
+		)
 	})
 
 	cleanupE2ETest(t, k8sh, namespace, storeName, deleteStore, testContainerName)
