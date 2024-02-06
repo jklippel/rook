@@ -1138,7 +1138,7 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
-			"bash", "-c", "aws --endpoint-url=http://"+RgwServiceName(storeName)+"."+namespace+".svc s3 ls | grep testfile2",
+			"bash", "-c", "aws --endpoint-url=http://"+RgwServiceName(storeName)+"."+namespace+".svc s3 ls s3://"+testContainerName+"| grep testfile2",
 		)
 
 	})
