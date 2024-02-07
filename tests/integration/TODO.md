@@ -100,3 +100,25 @@ Upstream tests nochmal anschauen
 
 > It must be possible to serve S3 and Swift for the same object store
 > pool.
+
+## Sollen wir noch VersioningEnabled: true testen?
+https://docs.ceph.com/en/octopus/radosgw/config-ref/#swift-settings
+https://docs.openstack.org/swift/latest/api/object_versioning.html
+
+## Dieses Feature unterstützten wir nicht: rgw trust forwarded https
+
+Ist das Absicht? Fehlt das noch? Sollen wir ein Issue für später aufmachen, 
+es implementieren oder ignorieren?
+
+https://docs.ceph.com/en/octopus/radosgw/config-ref/#swift-settings
+
+## Dieses Feature unterstützen wir nicht: rgw swift token expiration
+https://docs.ceph.com/en/octopus/radosgw/config-ref/#swift-settings
+
+## Dieses Feature unterstützen wir nicht: rgw enforce swift acls
+https://docs.ceph.com/en/octopus/radosgw/config-ref/#swift-settings
+
+## Wo wird revocationInterval verwendet?
+
+Wird es überhaupt ausgelesen und verwendet?
+Findet sich im CRD z.B. hier: deploy/examples/crds.yaml
