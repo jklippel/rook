@@ -43,13 +43,7 @@ dass man nicht alles in einem PR implementieren muss.
 
 ## nach erstem rudimentären mal den PR aufmachen und die Community einbinden
 
-## (wip) GetKeystoneUserSecret anpassen (jan)
-
-In object.go die Funktion GetKeystoneUserSecret anpassen/variabler machen
-
-## (wip) Refaktor: ceph_base_keystone_test.go credentials in Konstanten auslagern (jan)
-
-##  (low-prio) Nebenschauplatz: tests/scripts/generate-tls-config.sh kubectl version --short schlägt fehl, denn es ist nicht mehr aktuell
+## (low-prio) Nebenschauplatz: tests/scripts/generate-tls-config.sh kubectl version --short schlägt fehl, denn es ist nicht mehr aktuell
 
 ## (low-prio) Ceph-Swift-Dokumentation anschauen und verbessern
 
@@ -88,12 +82,8 @@ Das letzte Yaook-Image ist für Yoga, aber man könnte da ruhig auch ein paar ne
 https://gitlab.com/yaook/images/keystone/-/merge_requests/100
 
 
-## COSI-Fehler / wo kommen die her? (jan)
+## (done) COSI-Fehler / wo kommen die her? (jan)
 failed to reconcile CephObjectStore "keystoneauth-ns/default". failed to create object store deployments: failed to get COSI user "cosi": Get "http://rook-ceph-rgw-default.keystoneauth-ns.svc:80/admin/user?format=json&uid=cosi": dial tcp 10.106.142.173:80: connect: connection refused
 
 Upstream tests nochmal anschauen
-
-## Da gibts einen TODO in controller_test.go (jan)
-https://github.com/jklippel/rook/commit/fbc4c59b6a71d0e46bdae9d529b253202c0f611b
-Was machen wir mit dem?
--> rausmachen, test laufen lassen
+-> Taucht in den upstream logs nicht auf
