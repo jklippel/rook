@@ -51,6 +51,14 @@ dass man nicht alles in einem PR implementieren muss.
 
 ## (low-prio) Schauen, warum das ceph_manifest.go Dinge verwenden möchte, die nicht im CRD sind
 
+Scheint ein Entwurf gewesen zu sein. Ich (Jan) würde es erstmal rauslassen. Zumal mir das Konzept nicht klar ist:
+Einzelne Buckets prüfen? Oder einen bestimmten? Immer wieder abfragen in dem Interval ob der noch da ist?
+
+Der hier angegebene 'type:' ist deprecated laut Design-Dokument
+The currently ignored `gateway.type` option is deprecated and from now on
+explicitly ignored by rook.
+
+
 ```
 diff --git a/tests/framework/installer/ceph_manifests.go b/tests/framework/installer/ceph_manifests.go
 index 5cba689e2..21aa32ee8 100644
@@ -87,3 +95,8 @@ failed to reconcile CephObjectStore "keystoneauth-ns/default". failed to create 
 
 Upstream tests nochmal anschauen
 -> Taucht in den upstream logs nicht auf
+
+## Wie testen wir das? (Aus dem Design-Dokument)
+
+> It must be possible to serve S3 and Swift for the same object store
+> pool.
