@@ -1120,7 +1120,15 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 		)
 	})
 
-	t.Run("List bucket with S3 with aws debugg", func(t *testing.T) {
+	t.Run("Wait a little", func(t *testing.T) {
+		testInOpenStackClient(t, k8sh, namespace,
+			testProjectName, "alice", true,
+			"bash", "-c", "sleep 1800",
+		)
+
+	})
+
+	t.Run("List bucket with S3 with aws debug", func(t *testing.T) {
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
 			"bash", "-c", "aws --debug --endpoint-url=http://"+RgwServiceName(storeName)+"."+namespace+".svc s3api list-buckets",
