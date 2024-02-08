@@ -1125,7 +1125,6 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 			testProjectName, "alice", true,
 			"bash", "-c", "sleep 1800",
 		)
-
 	})
 
 	t.Run("List bucket with S3 with aws debug", func(t *testing.T) {
