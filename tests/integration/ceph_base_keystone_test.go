@@ -1116,8 +1116,16 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 	t.Run("create AWS config file", func(t *testing.T) {
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
-			"bash", "-c", "mkdir -p .aws && openstack ec2 credentials create -fjson | jq -r '\"[default]\\naws_access_key_id = \" + .access + \"\\naws_secret_access_key = \" + .secret' | tee .aws/credentials",
+			"bash", "-c", "mkdir -p .aws && openstack ec2 credentials create -fjson | jq -r '\"[default]\\naws_access_key_id = \" + .access + \"\\naws_secret_access_key = \" + .secret\\n' | tee .aws/credentials",
 		)
+	})
+
+	t.Run("List bucket with S3", func(t *testing.T) {
+		testInOpenStackClient(t, k8sh, namespace,
+			testProjectName, "alice", true,
+			"bash", "-c", "aws --endpoint-url=http://"+RgwServiceName(storeName)+"."+namespace+".svc s3api list-buckets | jq '.Buckets | .[].Name' -r | grep "+testContainerName,
+		)
+
 	})
 
 	t.Run("List file with S3 created by OS", func(t *testing.T) {
@@ -1132,14 +1140,6 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
 			"bash", "-c", "aws --endpoint-url=http://"+RgwServiceName(storeName)+"."+namespace+".svc s3 ls s3://"+testContainerName+"| grep testfile2",
-		)
-
-	})
-
-	t.Run("List bucket with S3", func(t *testing.T) {
-		testInOpenStackClient(t, k8sh, namespace,
-			testProjectName, "alice", true,
-			"bash", "-c", "aws --endpoint-url=http://"+RgwServiceName(storeName)+"."+namespace+".svc s3api list-buckets | jq '.Buckets | .[].Name' -r | grep "+testContainerName,
 		)
 
 	})
