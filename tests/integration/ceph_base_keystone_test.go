@@ -1123,7 +1123,7 @@ func runS3E2ETest(t *testing.T, helper *clients.TestClient, k8sh *utils.K8sHelpe
 	t.Run("Wait a little", func(t *testing.T) {
 		testInOpenStackClient(t, k8sh, namespace,
 			testProjectName, "alice", true,
-			"bash", "-c", "\"sleep 1800\"",
+			"bash", "-c", "sleep 1800",
 		)
 	})
 
