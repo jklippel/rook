@@ -138,7 +138,7 @@ func (h *KeystoneAuthSuite) TestWithSwiftAndKeystone() {
 	swiftAndKeystone := true
 
 	objectStoreServicePrefix = objectStoreServicePrefixUniq
-	// runSwiftE2ETest(h.T(), h.helper, h.k8shelper, h.installer, h.settings.Namespace, "default", 3, deleteStore, tls, swiftAndKeystone)
+	runSwiftE2ETest(h.T(), h.helper, h.k8shelper, h.installer, h.settings.Namespace, "default", 3, deleteStore, tls, swiftAndKeystone)
 	runS3E2ETest(h.T(), h.helper, h.k8shelper, h.installer, h.settings.Namespace, "default", 3, deleteStore, tls, swiftAndKeystone)
 	cleanUpTLSks(h)
 
