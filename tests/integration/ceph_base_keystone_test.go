@@ -445,8 +445,6 @@ spec:
 
 func keystoneDeployment(namespace string, adminpassword string) string {
 
-	keystoneImage := "registry.yaook.cloud/yaook/keystone-2023.2:3.0.35"
-
 	return `apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -466,7 +464,7 @@ spec:
     spec:
       initContainers:
       - name: init-fernet
-        image: ` + keystoneImage + `
+        image: registry.yaook.cloud/yaook/keystone-yoga:3.0.30
         command: ['sh', '-c', 'keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone']
         volumeMounts:
         - mountPath: /etc/keystone/keystone.conf
@@ -479,7 +477,7 @@ spec:
         securityContext:
           runAsUser: 2500001
       - name: init-db
-        image: ` + keystoneImage + `
+        image: registry.yaook.cloud/yaook/keystone-yoga:3.0.30
         command: ['sh', '-c', 'keystone-manage db_sync']
         volumeMounts:
         - mountPath: /etc/keystone/keystone.conf
@@ -490,7 +488,7 @@ spec:
         securityContext:
           runAsUser: 2500001
       - name: init-keystone-endpoint
-        image: ` + keystoneImage + `
+        image: registry.yaook.cloud/yaook/keystone-yoga:3.0.30
         command: [ 'sh', '-c', 'keystone-manage bootstrap --bootstrap-password ` + adminpassword + ` --bootstrap-username admin --bootstrap-project-name admin --bootstrap-role-name admin --bootstrap-service-name keystone --bootstrap-region-id RegionOne --bootstrap-admin-url https://keystone.` + namespace + `.svc --bootstrap-internal-url https://keystone.` + namespace + `.svc']
         volumeMounts:
         - mountPath: /etc/keystone/keystone.conf
@@ -506,7 +504,7 @@ spec:
           value: /etc/pki/tls/certs/ca-bundle.crt
         - name: WSGI_PROCESSES
           value: "3"
-        image: ` + keystoneImage + `
+        image: registry.yaook.cloud/yaook/keystone-yoga:3.0.30
         imagePullPolicy: Always
         name: keystone
         readinessProbe:
