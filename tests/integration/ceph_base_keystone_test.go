@@ -593,8 +593,6 @@ driver = sql
 
 [database]
 connection = sqlite:////var/keystone/keystone.db
-sqlite_synchronous = true
-max_pool_size = 1
 
 [cache]
 enabled = false`
